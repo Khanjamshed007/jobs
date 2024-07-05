@@ -1,37 +1,26 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { Stack } from "expo-router";
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font'
+import { useCallback } from "react";
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+SplashScreen.preventAutoHideAsync();
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+const Layout = () => {
+  const [fontLoaded] = useFonts({
+    DMBold: require('../../assets/fonts/DMSans-Bold.ttf'),
+    DMMedium: require('../../assets/fonts/DMSans-Medium.ttf'),
+    DMRegular: require('../../assets/fonts/DMSans-Regular.ttf'),
+  })
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontLoaded])
+
+  if (!fontLoaded) return null;
+  return <Stack screenOptions={onLayoutRootView} />
 }
+
+export default Layout;
